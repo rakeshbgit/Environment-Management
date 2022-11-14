@@ -65,7 +65,7 @@ public class Environment {
     }
 
     public String getBusy_till() {
-        refresh();
+       // refresh();
         return busy_till;
     }
 
@@ -80,14 +80,14 @@ public class Environment {
     public void setUser(String user) {
         this.user = user;
     }
-    public void refresh(){
-        DateTimeFormatter dtobj = DateTimeFormatter.ofPattern("yyyy-mm-dd");
-        if(!getStatus().equalsIgnoreCase("AVAILABLE")){
-            LocalDate ldb = LocalDate.parse(getBusy_till(),dtobj);
-            LocalDate ldt = LocalDate.parse(LocalDate.now().toString(),dtobj);
-            if(!ldt.isAfter(ldb)){
-                this.setStatus("AVAILABLE");
-            }
-        }
-    }
+//    public void refresh(){
+//        DateTimeFormatter dtobj = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+//        if(!getStatus().equalsIgnoreCase("AVAILABLE")){
+//            LocalDate ldb = LocalDate.parse(getBusy_till(),dtobj);
+//            LocalDate ldt = LocalDate.parse(LocalDate.now().toString(),dtobj);
+//            if(!ldt.isAfter(ldb)){
+//                this.setStatus("AVAILABLE");
+//            }
+//        }
+//    }
 }
