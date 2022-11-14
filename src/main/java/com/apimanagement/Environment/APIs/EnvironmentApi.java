@@ -57,15 +57,17 @@ public class EnvironmentApi {
     @DeleteMapping("/{id}")
     @RolesAllowed({"ROLE_ADMIN"})
     public  String delete(@PathVariable Integer id)
-    {   String msg="";
-        if(repo.getById(id)!= null)
-        {   msg=""+repo.getById(id).getEnvName();
-            repo.deleteById(id);
-            msg += " with id "+id +"is deleted";
-        }
-        else{
+    {
+        String msg="";
+        try{
+
+       repo.deleteById(id);
+            msg += "Environment with id "+id +"is deleted";
+
+        }catch (Exception e){
             msg += "Environment  with id "+id + "is not exist";
         }
+
        return msg;
     }
 
