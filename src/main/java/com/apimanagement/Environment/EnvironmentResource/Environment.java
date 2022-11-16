@@ -11,6 +11,9 @@ import javax.validation.constraints.NotNull;
 //import java.time.format.DateTimeFormatter;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.sql.Date;
 
 
 @Entity
@@ -23,12 +26,13 @@ public class Environment {
     @NotNull @Length(min = 5, max = 128)
     private String envName;
     private  String status = "AVAILABLE";
-    private String busy_till;
+    @DateTimeFormat
+    private Date busy_till;
     private String user;
     public Environment(){
 
     }
-    public Environment( String envName, String status,String busy_till,String user ){
+    public Environment( String envName, String status,Date busy_till,String user ){
         this.envName = envName;
         this.status = status;
         this.busy_till = busy_till;
@@ -64,12 +68,12 @@ public class Environment {
         this.status = status;
     }
 
-    public String getBusy_till() {
+    public Date getBusy_till() {
        // refresh();
         return busy_till;
     }
 
-    public void setBusy_till(String busy_till) {
+    public void setBusy_till(Date busy_till) {
         this.busy_till = busy_till;
     }
 
