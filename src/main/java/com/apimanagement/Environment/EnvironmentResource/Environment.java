@@ -1,21 +1,12 @@
 package com.apimanagement.Environment.EnvironmentResource;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-//import java.time.LocalDate;
-//import java.time.format.DateTimeFormatter;
-
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.HashSet;
+import java.util.Set;
 
-import java.sql.Date;
-
-
+//Model environment for Entity Environment
 @Entity
 @Table(name="environment")
 public class Environment {
@@ -25,25 +16,26 @@ public class Environment {
     @Column(nullable = false, length = 128)
     @NotNull @Length(min = 5, max = 128)
     private String envName;
-    private  String status = "AVAILABLE";
-    @DateTimeFormat
-    private Date busy_till;
-    private String user;
+    // Table environment_services having relation control over Environment and Services
+    @ManyToMany
+    @JoinTable(
+            name = "environment_services",
+            joinColumns = @JoinColumn(name = "environment_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_serviceId")
+    )
+
+    private Set<Service> services = new HashSet<>();
+    // Default Constructor
     public Environment(){
 
     }
-    public Environment( String envName, String status,Date busy_till,String user ){
-        this.envName = envName;
-        this.status = status;
-        this.busy_till = busy_till;
-        this.user = user;
-    }
+    // Parameterized Constructor for initialize the environment with its name
     public Environment(String envName)
     {
         this.envName = envName;
     }
 
-
+    //getters and setters
     public Integer getId() {
         return id;
     }
@@ -59,39 +51,17 @@ public class Environment {
     public void setEnvName(String envName) {
         this.envName = envName;
     }
-
-    public String getStatus() {
-        return status;
+    public Set<Service> getServices() {
+        return services;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setServices(Set<Service> services) {
+        this.services = services;
     }
 
-    public Date getBusy_till() {
-       // refresh();
-        return busy_till;
+    public void addService(Service service) {
+        this.services.add(service);
     }
 
-    public void setBusy_till(Date busy_till) {
-        this.busy_till = busy_till;
-    }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-//    public void refresh(){
-//        DateTimeFormatter dtobj = DateTimeFormatter.ofPattern("yyyy-mm-dd");
-//        if(!getStatus().equalsIgnoreCase("AVAILABLE")){
-//            LocalDate ldb = LocalDate.parse(getBusy_till(),dtobj);
-//            LocalDate ldt = LocalDate.parse(LocalDate.now().toString(),dtobj);
-//            if(!ldt.isAfter(ldb)){
-//                this.setStatus("AVAILABLE");
-//            }
-//        }
-//    }
 }

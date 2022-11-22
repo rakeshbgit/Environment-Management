@@ -19,24 +19,24 @@ import com.apimanagement.Environment.User.User;
 import com.apimanagement.Environment.User.Role;
 import io.jsonwebtoken.Claims;
 
-
+// Class for extracting the details for Authentication
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtUtil;
-
+    // Pre-checks and token authentication
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
+        // check for having Authorization Bearer token in the request
         if (!hasAuthorizationBearer(request)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = getAccessToken(request);
-
+        // check for the token has valid constraints
         if (!jwtUtil.validateAccessToken(token)) {
             filterChain.doFilter(request, response);
             return;
@@ -45,7 +45,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         setAuthenticationContext(token, request);
         filterChain.doFilter(request, response);
     }
-
+    // method to check the request having Authorization bearer token
     private boolean hasAuthorizationBearer(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
@@ -54,13 +54,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         return true;
     }
-
+    // method to retrieve the Access token from the request
     private String getAccessToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         String token = header.split(" ")[1].trim();
         return token;
     }
-
+    // token and request authentication
     private void setAuthenticationContext(String token, HttpServletRequest request) {
         UserDetails userDetails = getUserDetails(token);
 
@@ -72,7 +72,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-
+    // get the user details - id,username, roles from the token
     private UserDetails getUserDetails(String token) {
         User userDetails = new User();
         Claims claims = jwtUtil.parseClaims(token);

@@ -1,11 +1,12 @@
 package com.apimanagement.Environment.APIs;
 
 import javax.validation.Valid;
-
+import com.apimanagement.Environment.User.UserService;
 import com.apimanagement.Environment.Auth.AuthRequest;
 import com.apimanagement.Environment.Auth.AuthResponse;
 import com.apimanagement.Environment.JWT.JwtTokenUtil;
 import com.apimanagement.Environment.User.User;
+import com.apimanagement.Environment.User.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 
+// REST API controller for user authentication
 
 @RestController
 public class AuthApi {
     @Autowired AuthenticationManager authManager;
     @Autowired
     JwtTokenUtil jwtUtil;
-
+    @Autowired private  UserService servic;
+    //Post the  request for user  to login
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
         try {
@@ -43,4 +48,7 @@ public class AuthApi {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+
+
 }

@@ -1,5 +1,5 @@
 package com.apimanagement.Environment.User;
-
+// Data Transfer Object for User
 public class UserDTO
     {
         private Integer id;

@@ -17,16 +17,18 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
-
+// Class for Token generation utilities
 @Component
 public class JwtTokenUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
 
-    private static final long EXPIRE_DURATION = 24 * 60 * 60 * 1000; // 24 hour
+    // for 24 hour expiration validity
+    private static final long EXPIRE_DURATION = 24 * 60 * 60 * 1000;
 
+    // SECRET KEY - value defined in application properties
     @Value("${app.jwt.secret}")
     private String SECRET_KEY;
-
+    // generating the access token - encoding the details
     public String generateAccessToken(User user) {
 
         return Jwts.builder()
@@ -39,12 +41,13 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    // Validating the access token
     public boolean validateAccessToken(String token) {
         try {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException ex) {
-            LOGGER.error("JWT expired", ex.getMessage());
+            LOGGER.error("JWT Token expired", ex.getMessage());
         } catch (IllegalArgumentException ex) {
             LOGGER.error("Token is null, empty or only whitespace", ex.getMessage());
         } catch (MalformedJwtException ex) {

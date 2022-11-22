@@ -3,7 +3,7 @@ package com.apimanagement.Environment.Auth;
 public class AuthResponse {
     private String email;
     private String accessToken;
-
+// DTO for Handling the Response
     public AuthResponse() { }
 
     public AuthResponse(String email, String accessToken) {

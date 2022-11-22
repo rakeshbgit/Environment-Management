@@ -1,5 +1,6 @@
 package com.apimanagement.Environment.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,11 +10,11 @@ import javax.validation.constraints.Email;
 import java.awt.font.TextHitInfo;
 import java.util.*;
 
-
+// Model for User Entity
 @Entity
     @Table(name = "users")
     public class User implements UserDetails {
-    //User - id, name, username(email),password,roles
+    //User Entity - id, name, username(email),password,roles
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
@@ -27,6 +28,9 @@ import java.util.*;
 
         @Column(nullable = false, length = 64)
         private String password;
+
+        private  String user_roles;
+        //Table for managing user with their roles
     @ManyToMany
     @JoinTable(
             name = "users_roles",
@@ -34,36 +38,37 @@ import java.util.*;
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
         private Set<Role> roles = new HashSet<>();
-        //default Constructor
-        public User(){
+    //default Constructor
+    public User(){
 
-        }
-        // Parametrized Constructor
-        public  User(String username,String password){
-            this.password = password;
-            this.username = username;
-            this.name =  username.substring(0,username.lastIndexOf('@'));
+    }
+    //parameterized Constructor for updating roles
+    public  User(String username, String password, String user_roles)
+    {
+       // this.password = password;
+        this.username = username;
+        this.name =  username.substring(0,username.lastIndexOf('@'));
 
-        }
+    }
+    // Parameterized Constructor
+    public  User(String username,String password){
+        this.password = password;
+        this.username = username;
+        this.name =  username.substring(0,username.lastIndexOf('@'));
 
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
-                ", roles=" + roles +
-                '}';
+    }
+    //
+    public User(String user_roles){
+        this.user_roles = user_roles;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
-        return authorities;
+    // Respective getters and setters
+    public String getUser_roles() {
+        return user_roles;
+    }
+
+    public void setUser_roles(String user_roles) {
+        this.user_roles = user_roles;
     }
 
     public String getName() {
@@ -86,6 +91,19 @@ import java.util.*;
         this.username = username;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+    // Overridden methods UserDetails for UserAccountManage
+    // By default all are true when user added with credentials
     @Override
     public String getPassword() {
         return this.password;
@@ -119,15 +137,24 @@ import java.util.*;
     public boolean isEnabled() {
         return true;
     }
-    public Set<Role> getRoles() {
-        return roles;
+    // Adding the user's roles as authorities to manage authorization while accessing Application
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void addRole(Role role) {
-        this.roles.add(role);
+    // toString method for user details
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

@@ -4,7 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
-
+// DTO for Handling the user authentication Request
 public class AuthRequest {
     @NotNull @Email @Length(min = 5, max = 50)
     private String username;
