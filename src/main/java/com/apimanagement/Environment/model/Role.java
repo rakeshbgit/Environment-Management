@@ -1,4 +1,4 @@
-package com.apimanagement.Environment.User;
+package com.apimanagement.Environment.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

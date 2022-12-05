@@ -1,9 +1,8 @@
-package com.apimanagement.Environment.JWT;
+package com.apimanagement.Environment.security;
 
 import java.util.Date;
-import java.util.Set;
 
-import com.apimanagement.Environment.User.User;
+import com.apimanagement.Environment.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

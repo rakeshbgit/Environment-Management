@@ -1,4 +1,4 @@
-package com.apimanagement.Environment.EnvironmentResource;
+package com.apimanagement.Environment.model;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,9 +13,12 @@ import java.sql.Date;
 public class Service {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer serviceId;
-    @Column  @NotNull
+    @Column(unique = true)  @NotNull
     @Length(min = 5, max = 128)
     private String serviceName;
+    @ManyToOne
+    @JoinColumn( name = "environment_id",referencedColumnName = "id",nullable = false)
+    private Environment environment;
     @Column
     private String status="AVAILABLE";
     @Column
@@ -25,17 +28,21 @@ public class Service {
     private String currUser;
     @Column
     private String lastUser;
+    @Column(insertable = false,updatable = false)
+    private  Integer environment_id;
 
     //default constructor
     public Service(){
 
     }
+
+
+
     // parameterized constructor for updating the service
-    public Service(String name, String status, Date busytill,String user)
+    public Service(String name, Date busyTill,String user)
     {
         this.serviceName = name;
-        this.status = status;
-        this.busyTill = busytill;
+        this.busyTill = busyTill;
         this.currUser = user;
 
     }
@@ -87,6 +94,13 @@ public class Service {
 
     public String getLastUser() {
         return lastUser;
+    }
+    public Integer getEnvironment_id() {
+        return environment_id;
+    }
+
+    public void setEnvironment_id(Integer environment_id) {
+        this.environment_id = environment_id;
     }
 
     public void setLastUser(String lastUser) {

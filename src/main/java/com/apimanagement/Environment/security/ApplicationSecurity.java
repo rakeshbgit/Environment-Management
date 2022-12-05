@@ -1,9 +1,8 @@
-package com.apimanagement.Environment;
+package com.apimanagement.Environment.security;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.apimanagement.Environment.JWT.JwtTokenFilter;
-import com.apimanagement.Environment.User.UserRepository;
+import com.apimanagement.Environment.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,10 +12,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Arrays;
 
 
 @EnableWebSecurity(debug = true)
@@ -26,6 +33,12 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     @Autowired private UserRepository userRepo;
 
     @Autowired private JwtTokenFilter jwtTokenFilter;
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .inMemoryAuthentication()
+                .withUser("user").password("password").roles("ADMIN");
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -44,8 +57,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers("/auth/login","/signup").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/auth/login","/signup","/users/**").permitAll().anyRequest().fullyAuthenticated();
         http.exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
@@ -63,6 +75,12 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+    @Bean
+    public UserDetailsService userDetailsService(){
+        GrantedAuthority authority = new SimpleGrantedAuthority("ADMIN");
+        UserDetails userDetails = (UserDetails)new User("ram", "ram123", Arrays.asList(authority));
+        return new InMemoryUserDetailsManager(Arrays.asList(userDetails));
     }
 }
 

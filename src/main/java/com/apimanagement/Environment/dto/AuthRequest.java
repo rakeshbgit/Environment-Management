@@ -1,4 +1,4 @@
-package com.apimanagement.Environment.Auth;
+package com.apimanagement.Environment.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

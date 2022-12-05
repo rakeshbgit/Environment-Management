@@ -1,13 +1,11 @@
-package com.apimanagement.Environment.User;
+package com.apimanagement.Environment.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.awt.font.TextHitInfo;
 import java.util.*;
 
 // Model for User Entity
@@ -19,24 +17,20 @@ import java.util.*;
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
 
-    @Column(nullable = false, length = 50, unique = true)
+        @Column(nullable = false, length = 50, unique = true)
         @Email
         private String username;
-
-        @Column
-        private String name;
 
         @Column(nullable = false, length = 64)
         private String password;
 
+        @Column
+        private String name;
+
         private  String user_roles;
         //Table for managing user with their roles
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+        @ManyToMany()
+        @JoinTable(name = "users_roles",joinColumns =@JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name = "role_id"))
         private Set<Role> roles = new HashSet<>();
     //default Constructor
     public User(){
@@ -47,14 +41,14 @@ import java.util.*;
     {
        // this.password = password;
         this.username = username;
-        this.name =  username.substring(0,username.lastIndexOf('@'));
+      //  this.name =  username.substring(0,username.lastIndexOf('@'));
 
     }
     // Parameterized Constructor
     public  User(String username,String password){
         this.password = password;
         this.username = username;
-        this.name =  username.substring(0,username.lastIndexOf('@'));
+      //  this.name =  username.substring(0,username.lastIndexOf('@'));
 
     }
     //
@@ -71,13 +65,7 @@ import java.util.*;
         this.user_roles = user_roles;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String uname) {
-        this.name = uname.substring(0,uname.lastIndexOf('@'));
-    }
     public Integer getId() {
 
         return id;
@@ -113,6 +101,13 @@ import java.util.*;
     public String getUsername() {
         return this.username;
     }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = this.username.substring(0,username.lastIndexOf('@'));
+    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -147,13 +142,14 @@ import java.util.*;
         return authorities;
     }
 
+
+
     // toString method for user details
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
                 ", roles=" + roles +
                 '}';
     }

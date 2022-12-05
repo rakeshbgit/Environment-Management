@@ -1,7 +1,8 @@
-package com.apimanagement.Environment.EnvironmentResource;
+package com.apimanagement.Environment.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Length;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,16 +14,11 @@ public class Environment {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Integer id;
-    @Column(nullable = false, length = 128)
+    @Column(unique = true)
     @NotNull @Length(min = 5, max = 128)
     private String envName;
     // Table environment_services having relation control over Environment and Services
-    @ManyToMany
-    @JoinTable(
-            name = "environment_services",
-            joinColumns = @JoinColumn(name = "environment_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_serviceId")
-    )
+    @OneToMany(mappedBy = "environment")
 
     private Set<Service> services = new HashSet<>();
     // Default Constructor
@@ -63,5 +59,12 @@ public class Environment {
         this.services.add(service);
     }
 
-
+    @Override
+    public String toString() {
+        return "Environment{" +
+                "id=" + id +
+                ", envName='" + envName + '\'' +
+                ", services=" + services +
+                '}';
+    }
 }

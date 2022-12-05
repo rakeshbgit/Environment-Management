@@ -1,4 +1,4 @@
-package com.apimanagement.Environment.Auth;
+package com.apimanagement.Environment.dto;
 
 public class AuthResponse {
     private String email;

@@ -1,4 +1,4 @@
-package com.apimanagement.Environment.JWT;
+package com.apimanagement.Environment.security;
 
 import java.io.IOException;
 
@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.apimanagement.Environment.User.User;
-import com.apimanagement.Environment.User.Role;
+import com.apimanagement.Environment.model.User;
+import com.apimanagement.Environment.model.Role;
 import io.jsonwebtoken.Claims;
 
 // Class for extracting the details for Authentication
